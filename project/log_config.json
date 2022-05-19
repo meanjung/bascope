@@ -1,0 +1,34 @@
+{
+    "version": 1,
+    "disable_existing_loggers": false,
+    "formatters": {
+        "basic": {
+            "format": "%(asctime)s [%(levelname)s] %(filename)s:%(lineno)d %(name)s:%(funcName)s\n> %(message)s",
+            "datefmt": "%Y-%m-%d | %H:%M:%S"
+        }
+    },
+    "handlers": {
+        "console": {
+            "class": "logging.StreamHandler",
+            "level": "DEBUG",
+            "formatter": "basic"
+        },
+        "file_debug": {
+            "class": "logging.NullHandler",
+            "level": "DEBUG",
+            "formatter": "basic"
+        },
+        "file_error": {
+            "class": "logging.NullHandler",
+            "level": "ERROR",
+            "formatter": "basic"
+        }
+    },
+    "loggers": {
+        "": {
+            "level": "DEBUG",
+            "handlers": ["console"],
+            "propagate": false
+        }
+    }
+}

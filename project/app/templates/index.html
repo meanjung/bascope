@@ -1,0 +1,1496 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>BAScope - Dashboard</title>
+
+    <!-- Custom fonts for this template-->
+    <link href="../static/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab&display=swap" rel="stylesheet">
+
+    <!-- Custom styles for this template-->
+    <link href="../static/css/sb-admin-2.min.css" rel="stylesheet">
+	<script> 
+	    var src_ip='';
+        var isVisit = 0;
+	</script>
+    <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="https://visjs.github.io/vis-network/standalone/umd/vis-network.min.js"></script> <!-- modify -->
+    <style type="text/css">
+        body {
+          font: 12pt Roboto Slab;
+          line-height: 1.5em;
+          width: 100%;
+          height: 100%;
+          padding: 0;
+          margin: 0;
+          color: #4d4d4d;
+          box-sizing: border-box;
+          overflow: hidden;
+        }
+        
+        html {
+          font: 12pt Roboto Slab;
+          line-height: 1.5em;
+          width: 100%;
+          height: 100%;
+          padding: 0;
+          margin: 0;
+          color: #4d4d4d;
+          box-sizing: border-box;
+          overflow: hidden;
+        }
+  
+        #header {
+          margin: 0;
+          padding: 10px;
+          box-sizing: border-box;
+        }
+  
+        #contents {
+          height: 100%;
+          margin: 0;
+          padding: 0;
+          box-sizing: border-box;
+          position: relative;
+        }
+  
+        #left,
+        #right {
+          position: absolute;
+          width: 100%;
+          height: 100%;
+          margin: 0;
+          padding: 10px;
+          box-sizing: border-box;
+          display: inline-block;
+        }
+  
+        #left {
+          top: 0;
+          left: 0;
+        }
+  
+        #right {
+          top: 0;
+          
+          
+        }
+  
+        #error {
+          color: red;
+        }
+  
+        #data {
+          width: 100%;
+          height: 100%;
+          border: 1px solid #d3d3d3;
+          box-sizing: border-box;
+          resize: none;
+        }
+  
+        #draw {
+          padding: 5px 15px;
+        }
+  
+        #mynetwork {
+          width: 100%;
+          height: 100%;
+          border: 1px solid #d3d3d3;
+          box-sizing: border-box;
+        }
+  
+      
+      </style>
+
+</head>
+
+<body id="page-top"  style="overflow-y:auto; overflow-x:hidden">
+
+    <!-- Page Wrapper -->
+    <div id="wrapper">
+
+        <!-- Sidebar -->
+        <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion toggled" id="accordionSidebar" >
+
+            <!-- Sidebar - Brand -->
+            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="/">
+                <div class="sidebar-brand-icon rotate-n-15">
+                    <i class="fas fa-laugh-wink"></i>
+                </div>
+                <div class="sidebar-brand-text mx-3">BASCope</div>
+            </a>
+
+            <!-- Divider -->
+            <hr class="sidebar-divider my-0">
+
+            <!-- Nav Item - Dashboard -->
+            <li class="nav-item active">
+                <a class="nav-link" href="/">
+                    <i class="fas fa-fw fa-tachometer-alt"></i>
+                    <span>Dashbaord</span></a>
+            </li>
+
+            <!-- Divider -->
+            <hr class="sidebar-divider">
+
+            <!-- Heading -->
+            <div class="sidebar-heading">
+                Interface
+            </div>
+
+            <!-- Nav Item - Pages Collapse Menu -->
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo"
+                    aria-expanded="true" aria-controls="collapseTwo">
+                    <i class="fas fa-fw fa-cog"></i>
+                    <span>Pages</span>
+                </a>
+                <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        <h6 class="collapse-header">Custom Components:</h6>
+                        <a class="collapse-item" href="report">Report</a>
+                        <a class="collapse-item" href="matrix.html">Mitre Attack</a>
+                        <a class="collapse-item" href="upload-code.html">Upload Code</a>
+                        <a class="collapse-item" href="kvm-manage.html">VM</a>
+                        <a class="collapse-item" href="mail.html">Mail</a>
+                    </div>
+                </div>
+            </li>
+
+
+            <!-- Divider -->
+            <hr class="sidebar-divider">
+
+
+            <!-- Sidebar Toggler (Sidebar) -->
+            <div class="text-center d-none d-md-inline">
+                <button class="rounded-circle border-0" id="sidebarToggle"></button>
+            </div>
+
+            
+
+        </ul>
+        <!-- End of Sidebar -->
+
+        <!-- Content Wrapper -->
+        <div id="content-wrapper" class="d-flex flex-column">
+
+            <!-- Main Content -->
+            <div id="content">
+
+                <!-- Topbar -->
+                <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+
+                    <!-- Sidebar Toggle (Topbar) -->
+                    <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
+                        <i class="fa fa-bars"></i>
+                    </button>
+
+                    <!-- Topbar Search -->
+                    <form
+                        class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
+                        <div class="input-group">
+                            <input type="text" class="form-control bg-light border-0 small" placeholder="Search for..."
+                                aria-label="Search" aria-describedby="basic-addon2">
+                            <div class="input-group-append">
+                                <button class="btn btn-primary" type="button">
+                                    <i class="fas fa-search fa-sm"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+
+                    <!-- Topbar Navbar -->
+                    <ul class="navbar-nav ml-auto">
+
+                        <!-- Nav Item - Search Dropdown (Visible Only XS) -->
+                        <li class="nav-item dropdown no-arrow d-sm-none">
+                            <a class="nav-link dropdown-toggle" href="#" id="searchDropdown" role="button"
+                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <i class="fas fa-search fa-fw"></i>
+                            </a>
+                            <!-- Dropdown - Messages -->
+                            <div class="dropdown-menu dropdown-menu-right p-3 shadow animated--grow-in"
+                                aria-labelledby="searchDropdown">
+                                <form class="form-inline mr-auto w-100 navbar-search">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control bg-light border-0 small"
+                                            placeholder="Search for..." aria-label="Search"
+                                            aria-describedby="basic-addon2">
+                                        <div class="input-group-append">
+                                            <button class="btn btn-primary" type="button">
+                                                <i class="fas fa-search fa-sm"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </li>
+
+                        <!-- Nav Item - Alerts -->
+                        <li class="nav-item dropdown no-arrow mx-1">
+                            <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button"
+                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <i class="fas fa-bell fa-fw"></i>
+                                <!-- Counter - Alerts -->
+                                <span class="badge badge-danger badge-counter">3+</span>
+                            </a>
+                            <!-- Dropdown - Alerts -->
+                            <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
+                                aria-labelledby="alertsDropdown">
+                                <h6 class="dropdown-header">
+                                    Alerts Center
+                                </h6>
+                                <a class="dropdown-item d-flex align-items-center" href="#">
+                                    <div class="mr-3">
+                                        <div class="icon-circle bg-primary">
+                                            <i class="fas fa-file-alt text-white"></i>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div class="small text-gray-500">December 12, 2019</div>
+                                        <span class="font-weight-bold">A new monthly report is ready to download!</span>
+                                    </div>
+                                </a>
+                                <a class="dropdown-item d-flex align-items-center" href="#">
+                                    <div class="mr-3">
+                                        <div class="icon-circle bg-success">
+                                            <i class="fas fa-donate text-white"></i>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div class="small text-gray-500">December 7, 2019</div>
+                                        $290.29 has been deposited into your account!
+                                    </div>
+                                </a>
+                                <a class="dropdown-item d-flex align-items-center" href="#">
+                                    <div class="mr-3">
+                                        <div class="icon-circle bg-warning">
+                                            <i class="fas fa-exclamation-triangle text-white"></i>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div class="small text-gray-500">December 2, 2019</div>
+                                        Spending Alert: We've noticed unusually high spending for your account.
+                                    </div>
+                                </a>
+                                <a class="dropdown-item text-center small text-gray-500" href="#">Show All Alerts</a>
+                            </div>
+                        </li>
+
+                        <!-- Nav Item - Messages -->
+                        <li class="nav-item dropdown no-arrow mx-1">
+                            <a class="nav-link dropdown-toggle" href="#" id="messagesDropdown" role="button"
+                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <i class="fas fa-envelope fa-fw"></i>
+                                <!-- Counter - Messages -->
+                                <span class="badge badge-danger badge-counter">7</span>
+                            </a>
+                            <!-- Dropdown - Messages -->
+                            <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
+                                aria-labelledby="messagesDropdown">
+                                <h6 class="dropdown-header">
+                                    Message Center
+                                </h6>
+                                <a class="dropdown-item d-flex align-items-center" href="#">
+                                    <div class="dropdown-list-image mr-3">
+                                        <img class="rounded-circle" src="img/undraw_profile_1.svg"
+                                            alt="...">
+                                        <div class="status-indicator bg-success"></div>
+                                    </div>
+                                    <div class="font-weight-bold">
+                                        <div class="text-truncate">Hi there! I am wondering if you can help me with a
+                                            problem I've been having.</div>
+                                        <div class="small text-gray-500">Emily Fowler · 58m</div>
+                                    </div>
+                                </a>
+                                <a class="dropdown-item d-flex align-items-center" href="#">
+                                    <div class="dropdown-list-image mr-3">
+                                        <img class="rounded-circle" src="img/undraw_profile_2.svg"
+                                            alt="...">
+                                        <div class="status-indicator"></div>
+                                    </div>
+                                    <div>
+                                        <div class="text-truncate">I have the photos that you ordered last month, how
+                                            would you like them sent to you?</div>
+                                        <div class="small text-gray-500">Jae Chun · 1d</div>
+                                    </div>
+                                </a>
+                                <a class="dropdown-item d-flex align-items-center" href="#">
+                                    <div class="dropdown-list-image mr-3">
+                                        <img class="rounded-circle" src="img/undraw_profile_3.svg"
+                                            alt="...">
+                                        <div class="status-indicator bg-warning"></div>
+                                    </div>
+                                    <div>
+                                        <div class="text-truncate">Last month's report looks great, I am very happy with
+                                            the progress so far, keep up the good work!</div>
+                                        <div class="small text-gray-500">Morgan Alvarez · 2d</div>
+                                    </div>
+                                </a>
+                                <a class="dropdown-item d-flex align-items-center" href="#">
+                                    <div class="dropdown-list-image mr-3">
+                                        <img class="rounded-circle" src="https://source.unsplash.com/Mv9hjnEUHR4/60x60"
+                                            alt="...">
+                                        <div class="status-indicator bg-success"></div>
+                                    </div>
+                                    <div>
+                                        <div class="text-truncate">Am I a good boy? The reason I ask is because someone
+                                            told me that people say this to all dogs, even if they aren't good...</div>
+                                        <div class="small text-gray-500">Chicken the Dog · 2w</div>
+                                    </div>
+                                </a>
+                                <a class="dropdown-item text-center small text-gray-500" href="#">Read More Messages</a>
+                            </div>
+                        </li>
+
+                        <div class="topbar-divider d-none d-sm-block"></div>
+
+                        <!-- Nav Item - User Information -->
+                        <li class="nav-item dropdown no-arrow">
+                            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
+                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">My Pages</span>
+
+                            </a>
+                            <!-- Dropdown - User Information -->
+                            <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
+                                aria-labelledby="userDropdown">
+                                <a class="dropdown-item" href="#">
+                                    <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
+                                    Profile
+                                </a>
+                                <a class="dropdown-item" href="#">
+                                    <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
+                                    Settings
+                                </a>
+                                <a class="dropdown-item" href="#">
+                                    <i class="fas fa-list fa-sm fa-fw mr-2 text-gray-400"></i>
+                                    Activity Log
+                                </a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
+                                    <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+                                    Logout
+                                </a>
+                            </div>
+                        </li>
+
+                    </ul>
+
+                </nav>
+                <!-- End of Topbar -->
+
+                <!-- Begin Page Content -->
+                <div class="container-fluid">
+
+                    <!-- Page Heading -->
+                    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                        <h1 class="h3 mb-0 text-gray-800">Dashboard</h1>
+                        <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
+                                class="fas fa-download fa-sm text-white-50"></i> Generate Report</a>
+                    </div>
+
+                    <!-- Content Row -->
+                    <div class="row">
+
+                        <!-- Earnings (Monthly) Card Example -->
+                        <div class="col-xl-3 col-md-6 mb-4">
+                            <div class="card border-left-primary shadow h-100 py-2">
+                                <div class="card-body">
+                                    <a href="#" id='attackStart'>
+                                    <div  class="row no-gutters align-items-center">
+                                        <div class="col mr-2">
+                                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                                Cyber Attack Simulation
+                                            </div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800">Attack Start</div>
+                                        </div>
+                                        <div class="col-auto">
+                                            <i class="fas fa-play fa-2x text-blue-800"></i>
+                                        </div>
+                                    </div>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+           
+                        <!-- Earnings (Monthly) Card Example -->
+                        <div class="col-xl-3 col-md-6 mb-4">
+                            <div class="card border-left-success shadow h-100 py-2">
+                                <div class="card-body">
+                                    <a href="/report" id='attackReport'>
+                                    <div class="row no-gutters align-items-center">
+                                        <div class="col mr-2">
+                                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                                Cyber Attack Report</div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800">Attack Report</div>
+                                        </div>
+                                        <div class="col-auto">
+                                            <i class="fas fa-file-alt fa-2x text-gray-300"></i>
+                                        </div>
+                                    </div>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Earnings (Monthly) Card Example -->
+                        <div class="col-xl-3 col-md-6 mb-4">
+                            <div class="card border-left-info shadow h-100 py-2">
+                                <div class="card-body">
+                                    <a href="/matrix">
+                                    <div class="row no-gutters align-items-center">
+                                        <div class="col mr-2">
+                                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Matrix
+                                            </div>
+                                            <div class="row no-gutters align-items-center">
+                                                <div class="col-auto">
+                                                    <div class="h5 mb-0 font-weight-bold text-gray-800">MITRE ATT&CK</div>
+                                                </div>
+                                                <div class="col">
+                                                    
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-auto">
+                                            <i class="fas fa-clipboard-list fa-2x text-gray-300"></i>
+                                        </div>
+                                    </div>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Pending Requests Card Example -->
+                        <div class="col-xl-3 col-md-6 mb-4">
+                            <div class="card border-left-warning shadow h-100 py-2">
+                                <div class="card-body">
+                                    <a href="/upload">
+                                        <div class="row no-gutters align-items-center">
+                                            <div class="col mr-2">
+                                                <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                                    Customed code</div>
+                                                <div class="h5 mb-0 font-weight-bold text-gray-800">Upload Exploit Code</div>
+                                            </div>
+                                            <div class="col-auto">
+                                                <i class="fas fa-file-upload fa-2x text-gray-300"></i>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="col-xl-3 col-md-6 mb-4">
+                            <div class="card border-left-danger shadow h-100 py-2">
+                                <div class="card-body">
+                                    <a href="#" id='nmapStart'>
+                                    <div  class="row no-gutters align-items-center">
+                                        <div class="col mr-2">
+                                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                                Search Vuln
+                                            </div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800">Nmap</div>
+                                        </div>
+                                        <div class="col-auto">
+                                            <i class="fas fa-search fa-2x fa-spin text-red-800"></i>
+                                        </div>
+                                    </div>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xl-3 col-md-6 mb-4">
+                            <div class="card border-left-custom shadow h-100 py-2">
+                                <div class="card-body">
+                                    <a href="#" id='exploit_start'>
+                                    <div  class="row no-gutters align-items-center">
+                                        <div class="col mr-2">
+                                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                                Published code
+                                            </div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800">Exploit-db</div>
+                                        </div>
+                                        <div class="col-auto">
+                                            <i class="fas fa-bug fa-2x fa-spin text-orange-800"></i>
+                                        </div>
+                                    </div>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    
+
+                        
+                    <!-- Content Row -->
+
+                    <div class="row">
+
+                        <!-- Area Chart -->
+                        <div class="col-xl-8_ col-lg-7" id = 'main1' style='display:none;' >
+                            <div class="card shadow mb-4">
+                                <!-- Card Header - Dropdown -->
+                                <div
+                                    class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                                    <h6 class="align='center' m-0 font-weight-bold text-primary"> Start Cyber Attack Simulation</h6>
+                                    <div class="dropdown no-arrow">
+                                        <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
+                                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
+                                        </a>
+                                        <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
+                                            aria-labelledby="dropdownMenuLink">
+                                            <div class="dropdown-header">Dropdown Header:</div>
+                                            <a class="dropdown-item" href="#" data-toggle="modal" data-target=".bd-example-modal-lg">Agent List View
+
+                                            </a>
+                                            
+                                            
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Card Body -->
+                                <!-- ADD script -->
+                           
+
+                                <div class="card-body" >
+                                    <!-- Here Add // form orignal is 'user'-->
+
+                                    <form class="p-5" id="malware_list" style='display:none;'  >  <!-- this is Agent list print form-->
+`                                       
+
+                                    </form>
+                                    
+                                    <form class="p-5" id="doing_select" style='display:none;'> 
+                                        <h2>
+                                        <div class="form-group">
+                                            <input type="checkbox"  name="doing" value="product" onclick='checkOne(this)'>  보안장비 점검
+                                        </div>
+                                        <div class="form-group">
+                                            <input type="checkbox"  name="doing" value="endpoint" onclick='checkOne(this)'> 타겟 PC 점검
+                                        </div>
+                                        <div class="form-group">
+                                            <input type="checkbox" name="doing" value="malware" onclick='checkOne(this)'> endpoint솔루션(백신) 점검
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="custom-control custom-checkbox small">
+                                                <a href="#" class="btn btn-primary btn-user" id="nextIP">Next</a>
+                                            </div>
+                                        </div>
+                                        </h2>
+                                    </form>
+
+                                    <form class="p-5" id="loading_page" style='display:none;'> 
+                                        <div class="form-group">
+                                                <div id='loadingImg'>
+                                                    <img src='../static/img/loading.svg' style='margin-left: auto; margin-right: auto; '/>
+                                                </div>
+                                                
+                                        </div>
+                                        
+                                    </form>
+
+
+                                    <form class="p-5" id="form_ipInput" style='display:none;'> <!-- THIS FORM IS PRODUCT AND AGENT ATTACK -->
+                                        <div class="form-group" id="src_input" style='display:inline;'>
+                                            <input type="text" class="form-control-user"
+                                                id="InputSrcIP" aria-describedby="emailHelp"
+                                                placeholder="Enter Source ip...">
+                                        </div>
+                                        <div class="form-group">
+                                            <input type="text" class="form-control-user"
+                                                id="InputDstIP" placeholder="Enter Target ip...">
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="custom-control custom-checkbox small">
+                                                <a href="#" class="btn btn-primary btn-user" id="nextCVE"> Start </a>
+                                            </div>
+                                        </div>
+                                    </form>
+                                 
+                                    <form class="p-5" id="security_equipment" style='display:none;'> <!-- THIS FORM IS check for Malware attack -->
+                                        <h2>
+                                        <div class="form-group">
+                                            <input type="checkbox" name="attack_type" value="atk_packet" onclick='checkOne3(this)'> 패킷
+                                        </div>
+                                        <div class="form-group">
+                                            <input type="checkbox" name="attack_type" value="atk_malware" onclick='checkOne3(this)'> 악성코드
+                                        </div>
+                                        
+                                        <div class="form-group">
+                                            <div class="custom-control custom-checkbox small">
+                                                <a href="#" class="btn btn-primary btn-user" id="nextAttackType">Next</a>
+                                            </div>
+                                        </div>
+                                        </h2>
+                                    </form>
+
+                                    <form class="p-5" id="print_CVE_list" style='display:none;'>
+                                    	<div class="form-group">
+
+                                            <table class="table">
+                                                <thead>
+                                                    <tr>
+                                                        <th></th>
+                                                        <th>공격번호</th>
+                                                        <th>프로그램</th>
+                                                        <th>사용법</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="cve_form">
+                                                
+
+                                                </tbody>
+                                            </table>
+                                    	
+                                    	
+                                        
+                                    	<!-- </ul> -->
+                                    	</div>
+                                    	<div class="form-group">
+                                            <div class="custom-control custom-checkbox small">
+                                            <a href="#" class="btn btn-primary btn-user" id="prevCVE">
+                                            Prev
+                                        	</a>
+                                                <a href="#" class="btn btn-primary btn-user" id="nextInfo">
+                                            Next
+                                        	</a>
+                                                
+                                            </div>
+                                        </div>
+
+                                    </form>
+                                    <form class="p-5" id="Confirm_attack_info" style='display:none;'>
+                                	    <div class="form-group">
+                                            <h2>Confrim attack information</h2><br><br>
+                                            <p id="finalSrc"></p>
+                                            <p id="finalDst"></p>
+                                            <p id="finalCVE"></p>
+					                    </div>
+					                    <a href="#" class="btn btn-primary btn-user" id="letGO">
+                                            let's go
+                                        	</a>
+                                    </form>
+                                    
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Pie Chart -->
+                        
+                        </div>
+
+
+                        <!-- nmap view -->
+                        <div class="col-xl-8_ col-lg-7" id = 'main2' style='display:none;' >
+                            <div class="card shadow mb-4">
+                                <!-- Card Header - Dropdown -->
+                                <div
+                                    class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                                    <h6 class="align='center' m-0 font-weight-bold text-primary"> Nmap: the Network Mapper</h6>
+                                    <div class="dropdown no-arrow">
+                                        <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
+                                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
+                                        </a>
+                                        <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
+                                            aria-labelledby="dropdownMenuLink">
+                                            <div class="dropdown-header">Dropdown Header:</div>
+                                            <a class="dropdown-item" href="#" data-toggle="modal" data-target=".bd-example-modal-lg">Agent List View
+
+                                            </a>
+                                            
+                                            
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Card Body -->
+                                <!-- ADD script -->
+                           
+
+                                <div class="card-body" >
+                                    <!-- Here Add // form orignal is 'user'-->
+
+                                    <form class="p-5" id="malware_list" style='display:none;'  >  <!-- this is Agent list print form-->
+                                    </form>
+                                    
+                                    <form class="p-5" id="nmap_ip_select" style='display:none;'> 
+                                       
+                                        <div class="form-group" style='display:inline;'>
+                                            <input type="text" class="form-control-user"
+                                                id="nmap_target_ip" placeholder="Enter Target ip..."><br><br>
+                                        </div>
+                                        
+                                        <div class="form-group">
+                                            <div class="custom-control custom-checkbox small">
+                                                <a href="#" class="btn btn-primary btn-user" id="nmap_ip_next"> Start </a>
+                                            </div>
+                                        </div>
+                                    </form>
+
+                                    <form class="p-5" id="nmap_loading_page" style='display:none;'> 
+                                        <div class="form-group">
+                                                <div id='loadingImg'>
+                                                    <img src='../static/img/loading.svg' style='margin-left: auto; margin-right: auto; '/>
+                                                </div>
+                                        </div>
+                                        
+                                    </form>
+                                    <form class="p-5" id="nmap_result" style='display:none;'> 
+                                        <h2>Nmap Result</h2><br><br>
+                                        <div class="form-group" id="nmap_res">
+                                        
+                                                
+                                        </div>
+                                        
+                                    </form>
+
+                                    <form class="p-5" id="form_ipInput" style='display:none;'> <!-- THIS FORM IS PRODUCT AND AGENT ATTACK -->
+                                        <div class="form-group" id="src_input" style='display:inline;'>
+                                            <input type="text" class="form-control-user"
+                                                id="InputSrcIP" aria-describedby="emailHelp"
+                                                placeholder="Enter Source ip...">
+                                        </div>
+                                        <div class="form-group">
+                                            <input type="text" class="form-control-user"
+                                                id="InputDstIP" placeholder="Enter Target ip...">
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="custom-control custom-checkbox small">
+                                                <a href="#" class="btn btn-primary btn-user" id="nextCVE"> Start </a>
+                                            </div>
+                                        </div>
+                                    </form>
+                                 
+                                    
+                                    <form class="p-5" id="Confirm_attack_info" style='display:none;'>
+                                	    <div class="form-group">
+                                            <h2>Confrim attack information</h2><br><br>
+                                            <p id="finalSrc"></p>
+                                            <p id="finalDst"></p>
+                                            <p id="finalCVE"></p>
+					                    </div>
+					                    <a href="#" class="btn btn-primary btn-user" id="letGO">
+                                            let's go
+                                        	</a>
+                                    </form>
+                                    
+                                </div>
+                            </div>
+                        </div>
+
+                        
+                        </div>
+
+
+                        <!-- exploit-db screen -->
+
+                    <div class="col-xl-8_ col-lg-7" id = 'main3' style='display:none;' >
+                        <div class="card shadow mb-4">
+                            <!-- Card Header - Dropdown -->
+                            <div
+                                class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                                <h6 class="align='center' m-0 font-weight-bold text-primary"> Exploit Database</h6>
+                                <div class="dropdown no-arrow">
+                                    <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
+                                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
+                                    </a>
+                                    <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
+                                        aria-labelledby="dropdownMenuLink">
+                                        <div class="dropdown-header">Dropdown Header:</div>
+                                        <a class="dropdown-item" href="#" data-toggle="modal" data-target=".bd-example-modal-lg">Agent List View
+
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Card Body -->
+                            <!-- ADD script -->
+                       
+
+                            <div class="card-body" >
+                                <!-- Here Add // form orignal is 'user'-->
+
+
+                                <form class="p-5" id="exploit_loading_page" style='display:none;'> 
+                                    <div class="form-group">
+                                            <div id='loadingImg'>
+                                                <img src='../static/img/loading.svg' style='margin-left: auto; margin-right: auto; '/>
+                                            </div>
+                                            
+                                    </div>
+                                    
+                                </form>
+
+                               
+                                
+                                <form class="p-5" id="exploit_ip_input" style='display:none;'> <!-- THIS FORM IS PRODUCT AND AGENT ATTACK -->
+                                    
+                                    <table style="margin-left: auto; margin-right: auto;">
+                                        <tr>
+                                            <td>Source IP</td>
+                                            <td><input type="text" class="form-control-user"
+                                                id="ex_src_ip" aria-describedby="emailHelp"
+                                                placeholder="Enter Source ip..."></td>
+                                        </tr>
+                                        <tr> 
+                                            <td>Destination IP</td>
+                                            <td><input type="text" class="form-control-user" 
+                                                id="ex_dst_ip" placeholder="Enter Target ip..."></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Service Name</td>
+                                            <td><input type="text" class="form-control-user"
+                                                id="ex_service" placeholder="Enter Service name..."></td>
+                                        </tr>
+                                    </table>
+                                    <br>
+                                 
+                                    <div class="form-group">
+                                        <div class="custom-control custom-checkbox small">
+                                            <a href="#" class="btn btn-primary btn-user" id="exploit_next"> Start </a>
+                                        </div>
+                                    </div>
+                                </form>
+                             
+                               
+
+                                <form class="p-5" id="print_searchsploit" style='display:none;'>
+                                    <div class="form-group">
+                                    <!-- <ul id="cve_form"> -->
+                                    <!-- INPUT CVE LIST -->
+                                        <table class="table">
+                                            <thead>
+                                                <tr>
+                                                    <th>ID</th>
+                                                    <th>Platform</th>
+                                                    <th>Path</th>
+                                                    <th>Title</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="exploit_form">
+                                            
+
+                                            </tbody>
+                                        </table>
+                                    
+                                    
+                                    <div class="form-group">
+                                        <input type="text" class="form-control-user"
+                                            id="ex_number" placeholder="Input ID number...">
+                                    </div>
+                                    <!-- </ul> -->
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="custom-control custom-checkbox small">
+                                        <a href="#" class="btn btn-primary btn-user" id="ex_prev">
+                                        Prev
+                                        </a>
+                                            <a href="#" class="btn btn-primary btn-user" id="ex_select">
+                                        Next
+                                        </a>
+                                            
+                                        </div>
+                                    </div>
+
+                                </form>
+                                <form class="p-5" id="ex_code_view" style='display:none;'>
+                                    <div class="form-group" >
+                                    <pre>
+                                        <textarea style='margin-left: auto; margin-right: auto; ' class="form-control prettyprint" style="width: 90%; height: 376px;" id="ex_code" name="body" rows="12" placeholder="code" >
+                                        
+                                        </textarea>
+                                    </pre>
+
+                                    </div>
+                                    <input  type="text" class="form-control-user" id="ex_commandline" placeholder="Input Command Line...">
+                                    <br>
+                                    <input  type="text" class="form-control-user" id="ex_commandline_port" placeholder="Target Port...">
+                                    <br><br>
+
+                                    <a href="#" id="ex_excute">
+                                        <button class="btn btn-success">Excute</button>
+                                    </a>
+                                </form>
+                                
+                            </div>
+                        </div>
+                    </div>
+
+                    
+                    </div>
+
+
+                        
+                    </div>
+
+                    <!-- Content Row -->
+                    <div class="row">
+                        
+                        <div class="col-xl-8_ col-lg-7" id = 'main2' style='display:none;'  >
+                            <div class="card shadow mb-4">
+                                <!-- Card Header - Dropdown -->
+                                <div
+                                    class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                                    <h6 class="align='center' m-0 font-weight-bold text-primary"> Attack Report </h6>
+                                    <div class="dropdown no-arrow">
+                                        <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
+                                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="card-body" >
+                                    
+                                    
+                                    
+                                    
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Pie Chart -->
+                        
+                        </div>
+                        
+                    </div>
+
+                    <!-- exploit-db Screen -->
+
+                
+
+
+                </div>
+                <!-- /.container-fluid -->
+
+            </div>
+            <!-- End of Main Content -->
+       
+            <!-- Footer -->
+            <footer class="sticky-footer bg-white">
+                <div class="container my-auto">
+                    <div class="copyright text-center my-auto">
+                        <span>Copyright &copy; Your Website 2021</span>
+                    </div>
+                </div>
+            </footer>
+            <!-- End of Footer -->
+
+        </div>
+        <!-- End of Content Wrapper -->
+
+    </div>
+    <!-- End of Page Wrapper -->
+
+    <!-- Scroll to Top Button-->
+    <a class="scroll-to-top rounded" href="#page-top">
+        <i class="fas fa-angle-up"></i>
+    </a>
+
+    <!-- Logout Modal-->
+    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                    <a class="btn btn-primary" href="login.html">Logout</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade bd-example-modal-lg show" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" style="display: none; padding-right: 15px;">
+        <div class="modal-dialog modal-lg">
+          <div class="modal-content">
+      
+            <div class="modal-header">
+              <h5 class="modal-title h4" id="myLargeModalLabel">Agent List Viewer</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">×</span>
+              </button>
+            </div>
+            <div class="modal-body">
+                <div id="contents">
+                    <div ><!--style="text-align:'center';left:50%; top:50%; -->
+                      <textarea id="data" style='display:none;'>
+                        digraph {
+                          node [shape=circle fontsize=16]
+                          edge [length=100, color=gray, fontcolor=black]
+                        
+                          Manage -> Agent2
+                          Agent2 -> Agent5
+                          Manage -> Agent4
+                          Manage -> Agent3
+                        
+                          Manage [
+                            fontcolor=white,
+                            color=red,
+                          ]
+                        }
+                            
+                  </textarea
+                      >
+                    </div>
+                    <div id="right"><!--right-->
+                      <div id="mynetwork"></div>
+                    </div>
+                  </div>
+              
+                  <script type="text/javascript">
+                    // create a network
+                    var container = document.getElementById("mynetwork");
+                    var options = {
+                      physics: {
+                        stabilization: false,
+                        barnesHut: {
+                          springLength: 200,
+                        },
+                      },
+                    };
+                    var data = {};
+                    var network = new vis.Network(container, data, options);
+              
+                    $("#draw").click(draw);
+              
+                    $("a.example").click(function (event) {
+                      var url = $(event.target).data("url");
+                      $.get(url)
+                        .done(function (dotData) {
+                          $("#data").val(dotData);
+                          draw();
+                        })
+                        .fail(function () {
+                          $("#error").html(
+                            "Error: Cannot fetch the example data because of security restrictions in JavaScript. Run the example from a server instead of as a local file to resolve this problem. Alternatively, you can copy/paste the data of DOT graphs manually in the textarea below."
+                          );
+                          resize();
+                        });
+                    });
+              
+                    $(window).resize(resize);
+                    $(window).load(draw);
+              
+                    $("#data").keydown(function (event) {
+                      if (event.ctrlKey && event.keyCode === 13) {
+                        // Ctrl+Enter
+                        draw();
+                        event.stopPropagation();
+                        event.preventDefault();
+                      }
+                    });
+              
+                    function resize() {
+                      $("#contents").height($("body").height() - $("#header").height() - 200);
+                    }
+              
+                    function draw() {
+                      try {
+                        resize();
+                        $("#error").html("");
+              
+                        // Provide a string with data in DOT language
+                        data = vis.parseDOTNetwork($("#data").val());
+              
+                        network.setData(data);
+                      } catch (err) {
+                        // set the cursor at the position where the error occurred
+                        var match = /\(char (.*)\)/.exec(err);
+                        if (match) {
+                          var pos = Number(match[1]);
+                          var textarea = $("#data")[0];
+                          if (textarea.setSelectionRange) {
+                            textarea.focus();
+                            textarea.setSelectionRange(pos, pos);
+                          }
+                        }
+              
+                        // show an error message
+                        $("#error").html(err.toString());
+                      }
+                    }
+                  </script>
+                </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+    <!-- Bootstrap core JavaScript-->
+    <script src="../static/vendor/jquery/jquery.min.js"></script>
+    <script src="../static/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+
+    <!-- Core plugin JavaScript-->
+    <script src="../static/vendor/jquery-easing/jquery.easing.min.js"></script>
+
+    <!-- Custom scripts for all pages-->
+    <script src="../static/js/sb-admin-2.min.js"></script>
+
+    <!-- Page level plugins -->
+    <script src="../static/vendor/chart.js/Chart.min.js"></script>
+
+    <!-- Page level custom scripts -->
+    <script src="../static/js/demo/chart-area-demo.js"></script>
+    <script src="../static/js/demo/chart-pie-demo.js"></script>
+
+
+    <script>
+        function checkOne(element) {
+        
+            const checkboxes 
+                = document.getElementsByName("doing");
+            
+            checkboxes.forEach((cb) => {
+                cb.checked = false;
+            })
+            
+            element.checked = true;
+        }
+        
+  
+        function checkOne3(element) {
+            const checkboxes 
+                = document.getElementsByName("attack_type");
+            
+            checkboxes.forEach((cb) => {
+                cb.checked = false;
+            })
+            
+            element.checked = true;
+        }
+    
+        $('#nextInfo').click(function(){
+            $("#print_CVE_list").hide();
+            document.getElementById('finalSrc').textContent = "Source IP : " + $('#InputSrcIP').val();
+            document.getElementById('finalDst').textContent = "Destination IP : " + $('#InputDstIP').val();
+            document.getElementById('finalCVE').textContent = "Attack :" + $("input:checkbox[name='chkCVE']:checked").val();
+            $('#Confirm_attack_info').show();
+    
+        });
+        
+      
+        
+
+        $('#nextAttackType').click(function(){
+            if($("input:checkbox[name=attack_type]:checked").val() == "atk_malware") {
+                $('#src_input').hide();    
+            }
+            $("#form_ipInput").show(); 
+            $('#security_equipment').hide();
+        });
+
+
+
+        $('#prevCVE').click(function() {
+            $('#print_CVE_list').hide();
+            $('#form_ipInput').show();
+            $('#InputSrcIP').val(src_ip);
+            $('#InputDstIP').val(dst_ip);
+            
+        });
+
+        /////////// main  bar clicked Event ~~~
+        $('#attackStart').click(function() { // init
+            $("#main2").hide();
+            $("#main3").hide();
+            $('#doing_select').show();
+            $('#nmap_ip_select').hide();
+            $("#main1").show();
+            $('#nmap_result').hide();
+            $("#form_ipInput").hide(); 
+            $("#print_CVE_list").hide();
+            $('#Confirm_attack_info').hide();
+            $('#security_equipment').hide();
+            $('#src_input').show();
+            $('#loading_page').hide();
+            
+            $('#InputSrcIP').val('');
+            $('#InputDstIP').val('');
+        });
+        ///////////////
+
+
+        // exploit-db screen start!~
+        $('#exploit_start').click(function(){
+            
+            $('#doing_select').hide();
+            $('#nmap_result').hide();
+            $("#main1").hide();
+            $("#main2").hide();
+            $("#main3").show();
+            $('#exploit_ip_input').show();
+            
+        });
+
+        $('#exploit_next').click(function(){ // Print searchsploit information 
+            $('#exploit_ip_input').hide();
+            $('#exploit_loading_page').show();
+
+            $.post('/attack/filter', JSON.stringify({
+                    type1 : "product_packet",
+                    src_ip: $('#ex_src_ip').val(),
+                    dst_ip: $('#ex_dst_ip').val(),
+                    service : $('#ex_service').val(),
+                }), function(r){
+                    
+                    showSearchSploit(r.results);
+                    $('#print_searchsploit').show();
+                    $('#exploit_loading_page').hide();
+                    
+                }, 'json');
+        });
+
+        $('#ex_select').click(function(){ // After choosing searchsploit 
+            $('#print_searchsploit').hide();
+            $.post('/attack/edit',JSON.stringify({
+                script_number: $('#ex_number').val(),
+            }), function(r){
+                $('#ex_code').text(r.code);
+                $('#ex_code_view').show();
+                /*
+                if(r.status == 200){    
+                    $('#ex_code').append(r);
+                    $('#ex_code_view').show();
+                }
+                */
+            },'json');
+        });
+
+
+        $('#ex_excute').click(function(){ // After choosing searchsploit 
+            $('#ex_code_view').hide();
+            $.post('/attack/save',JSON.stringify({
+                attack_id:$('#ex_number').val(),
+                src_ip: $('#ex_src_ip').val(),
+                dst_ip:$('#ex_dst_ip').val(),
+                edited: $('#ex_code').val(),
+                tport: $('#ex_commandline_port').val(),
+                usage:$('#ex_commandline').val(),
+            }), function(r){
+                if(r.status == 200){
+                    alert("success");
+                }
+            },'json');
+        });
+
+
+        // main screen nmap start event        
+        $('#nmapStart').click(function(){
+            $('#doing_select').hide();
+            $('#nmap_result').hide();
+            $("#main1").hide();
+            $("#main2").show();
+            $("#main3").hide();
+            $('#nmap_ip_select').show();
+
+        });
+        
+        
+        $('a#nmap_ip_next').on('click',function(e){
+            
+            $('#nmap_ip_select').hide();
+            $('#nmap_loading_page').show();
+            $.post('/nmap',JSON.stringify({
+                        ip: $('#nmap_target_ip').val(),
+                    }), function(r){
+                        $('#nmap_loading_page').hide();
+                        $('#nmap_res').append(r.result);
+                        $('#nmap_result').show();
+                    }, 'json');
+
+        });
+
+
+
+
+
+
+        $(function(){ // final start event
+
+        $('a#letGO').on('click',function(e){ // Event final check click!!!
+            //alert("[*]  let's start!");
+            alert("[*] Attack Start !");
+            e.preventDefault();
+            var arTest = [];
+            $("input[name='chkCVE']:checked").each(function(){
+                arTest.push($(this).val());
+            });
+
+            $.post('/attack/start', JSON.stringify({
+                    type: $("input:checkbox[name='doing']:checked").val(),// product or endpoint
+                    src_ip: $('#InputSrcIP').val(),
+                    dst_ip: $('#InputDstIP').val(),
+                    cve_id : arTest,
+                }), function(r){
+                    //alert('r.status is ', r.status);
+                    if(r.status==200){
+                        go_to_report();
+                    }
+                }, 'json');
+            
+        });
+
+        });
+
+        function go_to_report(){
+            if(confirm("공격 리포트를 확인하시겠습니까?")){
+                location.href="./report";
+            }
+        }
+        
+        
+        function escape_filtering(data){
+            data = data.replace(/&/g, '&amp;')
+                      .replace(/>/g, '&gt;')
+                      .replace(/</g, '&lt;')
+                      .replace(/"/g, '&quot;')
+                      .replace(/'/g, '&apos;');
+            return data;
+        }
+        
+
+        function showCVE(arr){
+            if(isVisit==0){
+                isVisit = 1;
+                arr.forEach(function(e){
+                    var temp = "<tr>";
+                    temp += `<td><input type="checkbox" name="chkCVE"  value="${e.attackId}"/></td>`;
+                    temp += `<td>${e.attackId}</td>`
+                    temp += `<td>${e.program}</td>`;
+                    var usage = escape_filtering(e.usage);
+                    console.log(usage)
+                    temp += `<td>${usage}</td>`;
+                    temp += `</tr>`;
+                    $('#cve_form').append(temp);
+                })
+            }
+        }
+        function split_str(data){
+            const arr = data.split('/exploits/');
+            return arr[1];
+        }
+        function showSearchSploit(arr){
+            
+                arr.forEach(function(e){
+                    
+                    var temp = "<tr>";
+                        //alert("123123");
+                    temp += "<td>"+e['EDB-ID']+"</td>";
+                    //alert("123123");
+                    temp += `<td>${e.Platform}</td>`;
+                    
+                    var tmp_str = split_str(e.Path);
+                    temp += `<td>${tmp_str}</td>`;
+                    var title = escape_filtering(e.Title);
+                    temp += `<td>${title}</td>`;
+                    temp += `</tr>`;
+                    $('#exploit_form').append(temp);
+                    
+                })
+        }
+
+        $(function() {
+            $('a#nextCVE').on('click', function(e) {                
+                if($("input:checkbox[name=doing]:checked").val() == "malware"
+                || $("input:checkbox[name=attack_type]:checked").val() == "atk_malware"){
+                    $('#InputSrcIP').val('127.0.0.1'); 
+                }
+                
+                var ipformat = /^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/;
+
+                if (ipformat.test($('#InputSrcIP').val()) 
+                    && ipformat.test($('#InputDstIP').val())) {
+                    
+                    $("#form_ipInput").hide();
+                    $('#loading_page').show();
+
+                    e.preventDefault();
+                    $.getJSON('/attack/filter',{
+                        type1: $("input:checkbox[name='doing']:checked").val(),// product or endpoint
+                        type2: $("input:checkbox[name=attack_type]:checked").val(),
+                        src_ip: $('#InputSrcIP').val(),
+                        dst_ip: $('#InputDstIP').val(),
+                    },
+                        function(r) {
+                            showCVE(r.result);
+                            //alert(attackList);
+                            $("#print_CVE_list").show();
+                            $('#loading_page').hide();
+                    });
+                }else{
+                    alert("IP 입력 형식이 틀립니다.");
+                    return false;   
+                }
+              });
+        });
+        $('#nextIP').click(function(){
+            $('#doing_select').hide();
+            if($("input:checkbox[name=doing]:checked").val() == "malware") {
+                $('#src_input').hide();    
+            }
+            if($("input:checkbox[name=doing]:checked").val() == "product") {
+                $('#security_equipment').show();   
+            }
+            else{
+                $("#form_ipInput").show(); 
+            }
+        });
+
+        $(function(){ // Get Agent list 
+            $('a#nextIP').on('click',function(e){ 
+            
+            e.preventDefault();
+            $.getJSON('/agent/list',{
+                type: $("input:checkbox[name='doing']:checked").val(),
+            
+                }, function(r){
+                    // r에 agentlist들이 담겨있다.
+                    load_agent_list(r);
+                    
+                });
+            
+            });
+        });
+        function load_agent_list(agents){
+            var temp = "<ul>";
+            agents.forEach(function(e){
+                temp +="<li>";
+                //temp +="<input type='checkbox' name='chkCVE' onclick='checkOne2(this)' value="+e.attackId+" />";
+                temp += " " + e + " ";
+                temp +="</li>";
+            })
+            tmp +="</ul>";
+            $('#malware_list').append(temp);
+        }
+
+    </script>
+    
+</body>
+
+</html>

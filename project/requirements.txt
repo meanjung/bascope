@@ -1,0 +1,9 @@
+Flask
+flask_redis
+flask_migrate
+beautifulsoup4
+kakaotrans
+pymysql
+bson
+Flask-Mail
+python3-logstash
