@@ -1,2 +1,0 @@
-# bascope
-SWMaestro project
